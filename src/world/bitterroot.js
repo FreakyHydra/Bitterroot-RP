@@ -337,6 +337,15 @@ export function publicWorldCatalog() {
     summary: BITTERROOT_WORLD.summary,
     themes: BITTERROOT_WORLD.themes,
     places: BITTERROOT_WORLD.places,
-    scenarios: BITTERROOT_WORLD.scenarios.map(({ opening, ...scenario }) => scenario),
+    scenarios: BITTERROOT_WORLD.scenarios.map((scenario) => ({
+      id: scenario.id,
+      title: scenario.title,
+      summary: scenario.summary,
+      placeId: scenario.placeId,
+      primaryCharacterId: scenario.primaryCharacterId,
+      castIds: scenario.castIds,
+      tags: scenario.tags,
+      contentRating: scenario.contentRating,
+    })),
   };
 }
