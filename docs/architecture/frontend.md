@@ -12,7 +12,9 @@ The primary information architecture is:
 4. **Stories** — curated starting scenarios and ongoing saves.
 5. **Lore** — relevant or discovered setting knowledge.
 
-The initial prototype keeps authored display data colocated with the page while the interaction and visual language settle. Backend records remain canonical. The next integration step is to replace colocated display records with reads from `/v1/world`, `/v1/places/:id`, and `/v1/places/:id/people`, without changing the navigation model.
+The playable dev product keeps authored discovery copy colocated with the page while backend records remain canonical. Story turns are sent to `POST /api/generate`, which compiles server-owned world, place, scene, character, Living Cast, persona, and recent-history context before calling NovelAI or Ollama.
+
+The current session, persona, and non-secret provider choice autosave in browser local storage. A NovelAI token is held only in browser session storage, transmitted as a bearer token, never added to the story record, and never logged. This makes the dev build fully playable without prematurely committing to an account system. Account authentication and durable server-side saves remain the next persistence milestone.
 
 ## Boundaries
 
@@ -21,6 +23,7 @@ The initial prototype keeps authored display data colocated with the page while 
 - Relationships remain keyed by `(characterId, personaId)` in backend persistence.
 - Age-safety metadata is enforced by the backend, never inferred from visual presentation.
 - Generated landscape and cast artwork is decorative presentation, not canon-bearing data.
+- Local Ollama is supported during self-hosted/local operation; a hosted Site cannot reach an Ollama process on the visitor’s machine.
 
 ## Deployment
 
