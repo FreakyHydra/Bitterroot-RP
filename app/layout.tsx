@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./cast-overrides.css";
+import "./lore.css";
 
 export const metadata: Metadata = {
   title: "Bitterroot — An Interactive Saga",
