@@ -29,13 +29,48 @@ export async function generateWithNovelAI(request, options = {}) {
       signal: controller.signal,
     });
 
-    if (!response.ok) throw providerError(novelAIStatusMessage(response.status), 502);
-    const payload = await response.json();
+    if (!response.ok) {
+      const upstreamBody = await readResponsePreview(response);
+      throw providerError(novelAIStatusMessage(response.status), 502, {
+        provider: "novelai",
+        model: request.model,
+        upstreamStatus: response.status,
+        upstreamStatusText: response.statusText,
+        upstreamBody,
+      });
+    }
+
+    let payload;
+    try {
+      payload = await response.json();
+    } catch (error) {
+      throw providerError("NovelAI returned an invalid JSON response", 502, {
+        provider: "novelai",
+        model: request.model,
+        upstreamStatus: response.status,
+        cause: error instanceof Error ? error.message : String(error),
+      });
+    }
+
     const text = extractOpenAIStyleReply(payload);
-    if (!text) throw providerError("NovelAI returned an empty reply", 502);
+    if (!text) {
+      throw providerError("NovelAI returned an empty reply", 502, {
+        provider: "novelai",
+        model: request.model,
+        upstreamStatus: response.status,
+        payloadShape: summarizePayload(payload),
+      });
+    }
+
     return { text: cleanGeneratedText(text), provider: "novelai", model: request.model };
   } catch (error) {
-    if (error?.name === "AbortError") throw providerError("NovelAI generation timed out", 504);
+    if (error?.name === "AbortError") {
+      throw providerError("NovelAI generation timed out", 504, {
+        provider: "novelai",
+        model: request.model,
+        timeoutMs: options.timeoutMs ?? 120_000,
+      });
+    }
     throw error;
   } finally {
     clearTimeout(timeout);
@@ -66,8 +101,24 @@ function cleanGeneratedText(value) {
     .slice(0, 24_000);
 }
 
-function providerError(message, status) {
-  return Object.assign(new Error(message), { status });
+async function readResponsePreview(response) {
+  try {
+    const text = await response.text();
+    return text.trim().slice(0, 2000);
+  } catch (error) {
+    return `[unreadable upstream body: ${error instanceof Error ? error.message : String(error)}]`;
+  }
+}
+
+function summarizePayload(value) {
+  if (!value || typeof value !== "object") return typeof value;
+  const keys = Object.keys(value).slice(0, 20);
+  const choices = Array.isArray(value.choices) ? value.choices.length : undefined;
+  return { keys, choices };
+}
+
+function providerError(message, status, diagnostics = undefined) {
+  return Object.assign(new Error(message), { status, diagnostics });
 }
 
 function boundedInteger(value, min, max, fallback) {
