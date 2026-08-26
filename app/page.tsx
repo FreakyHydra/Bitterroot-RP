@@ -319,6 +319,32 @@ function PlayerScreen({ session, persona, providerConfig, onSessionChange, onExi
     await requestReply(next);
   }
 
+  function deleteMessage(messageId: string) {
+    if (loading) return;
+    const index = session.messages.findIndex((message) => message.id === messageId);
+    if (index <= 0) return;
+    const next: Session = {
+      ...session,
+      updatedAt: new Date().toISOString(),
+      messages: session.messages.filter((message) => message.id !== messageId),
+    };
+    setError("");
+    onSessionChange(next);
+  }
+
+  async function regenerateLatestReply() {
+    if (loading) return;
+    const latest = session.messages.at(-1);
+    if (!latest || latest.sender !== "character" || session.messages.length <= 1) return;
+    const base: Session = {
+      ...session,
+      updatedAt: new Date().toISOString(),
+      messages: session.messages.slice(0, -1),
+    };
+    onSessionChange(base);
+    await requestReply(base);
+  }
+
   function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
@@ -344,10 +370,14 @@ function PlayerScreen({ session, persona, providerConfig, onSessionChange, onExi
         <section className="conversation" aria-label="Roleplay conversation">
           <div className="message-list">
             <div className="chapter-marker"><span>Chapter I</span><strong>{session.title}</strong></div>
-            {session.messages.map((message) => (
+            {session.messages.map((message, index) => (
               <article key={message.id} className={`message message-${message.sender}`}>
                 <header><span>{message.speaker}</span><time>{formatTime(message.createdAt)}</time></header>
                 <p>{message.text}</p>
+                {index > 0 && <div className="message-actions">
+                  <button type="button" onClick={() => deleteMessage(message.id)} disabled={loading}>Delete</button>
+                  {message.sender === "character" && index === session.messages.length - 1 && <button type="button" onClick={() => void regenerateLatestReply()} disabled={loading}>Regenerate</button>}
+                </div>}
               </article>
             ))}
             {loading && <div className="thinking"><LoaderCircle /> Bitterroot is answering…</div>}
