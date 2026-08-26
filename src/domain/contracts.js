@@ -12,6 +12,11 @@ export const PLACE_KINDS = Object.freeze([
 export const AVAILABILITY_LEVELS = Object.freeze(["likely", "possible", "unlikely"]);
 export const CONTENT_RATINGS = Object.freeze(["general", "mature"]);
 export const AGE_CATEGORIES = Object.freeze(["adult", "minor", "unknown"]);
+export const BODY_FORMS = Object.freeze([
+  "quadrupedal-feral",
+  "semi-upright-feral",
+  "upright-feral",
+]);
 
 export function relationshipKey(characterId, personaId) {
   requireId(characterId, "characterId");
@@ -53,6 +58,7 @@ export function assertWorld(world) {
 
   for (const character of world.characters) {
     if (!AGE_CATEGORIES.includes(character.ageCategory)) throw new Error(`Invalid age category: ${character.id}`);
+    if (!BODY_FORMS.includes(character.bodyForm)) throw new Error(`Invalid feral body form: ${character.id}`);
     if (character.ageCategory === "minor" && character.contentRating !== "general") {
       throw new Error(`Minor character must be general-rated: ${character.id}`);
     }

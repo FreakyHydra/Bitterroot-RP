@@ -84,6 +84,7 @@ function publicCharacter(character) {
     id: character.id,
     name: character.name,
     species: character.species,
+    bodyForm: character.bodyForm,
     age: character.age,
     ageCategory: character.ageCategory,
     role: character.role,

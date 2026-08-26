@@ -5,9 +5,11 @@
 
 ## Decision
 
-All people in Bitterroot are anthropomorphic or half-beast animal people.
-Humans do not exist in history, settlements, crowds, travel, player defaults,
-or generated incidental cast.
+All people in Bitterroot are intelligent, speaking feral animal people. Their
+body forms may be fully quadrupedal, semi-upright, or upright half-beast.
+They build societies and use tools adapted to their forms. Humans do not exist
+in history, settlements, crowds, travel, player defaults, or generated
+incidental cast.
 
 ## Enforcement
 

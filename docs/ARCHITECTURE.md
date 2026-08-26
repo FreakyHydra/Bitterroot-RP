@@ -171,11 +171,13 @@ The original ranger family is:
 
 No Whiteclaw names or lore are present.
 
-## Hard setting invariant: no humans
+## Hard setting invariant: speaking ferals, no humans
 
 Humans do not exist in Bitterroot. Every person—including travelers, villains,
 guards, background villagers, the player persona, and newly introduced side
-characters—must be an anthropomorphic or half-beast animal person.
+characters—is an intelligent, speaking feral animal person. Body forms range
+from fully quadrupedal through semi-upright to upright half-beast forms. Ferals
+build societies and use tools adapted to their bodies.
 
 This rule is present in mandatory lore and the final roleplay rules, and has a
 regression test.
@@ -189,6 +191,15 @@ make her adult-like, while her age does not flatten her into a generic child.
 
 The backend must never produce sexual or romanticized adult content involving
 a minor. This is a hard character invariant, not an optional frontend filter.
+
+## Era and technology
+
+Bitterroot is pre-industrial. Its societies use handcraft, agriculture,
+foraging, hunting, smithing, woodwork, masonry, carts, sailing, herbal medicine,
+and limited wind or water power. Tools and buildings are adapted to different
+feral body forms. Electricity, factories, engines, motor vehicles, radios,
+telephones, computers, modern firearms, and mass-produced synthetic goods are
+not part of ordinary life. Exceptions require explicit supernatural canon.
 
 ## API shape
 

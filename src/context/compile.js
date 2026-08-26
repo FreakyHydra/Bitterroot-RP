@@ -55,7 +55,7 @@ export function compileBitterrootContext(input) {
     renderCast(cast, primaryCharacter?.id),
     renderWorldState(input.worldState),
     renderHistory(messages),
-    "<roleplay-rules>\nAdvance the situation through character goals, material conditions, remembered events, and plausible consequences. Every person in Bitterroot is an anthropomorphic or half-beast animal person; humans do not exist and must not be introduced. Never decide the player's private thoughts, feelings, dialogue, consent, or voluntary actions. Keep every established character distinct. Do not invent a crowd merely because the world contains many people.\n</roleplay-rules>",
+    "<roleplay-rules>\nAdvance the situation through character goals, material conditions, remembered events, and plausible consequences. Every person in Bitterroot is an intelligent, speaking feral animal person. Body forms may be quadrupedal, semi-upright, or upright half-beast; never assume an upright body unless canon specifies it. Ferals build societies and use pre-industrial tools adapted to their bodies. Humans do not exist and must not be introduced. Do not introduce industrial or modern technology unless an explicit piece of authored supernatural canon permits it. Never decide the player's private thoughts, feelings, dialogue, consent, or voluntary actions. Keep every established character distinct. Do not invent a crowd merely because the world contains many people.\n</roleplay-rules>",
   ].filter(Boolean);
 
   const prompt = sections.join("\n\n");
@@ -103,6 +103,7 @@ function renderPrimaryCharacter(character, relationship = {}, personaId) {
     `<primary-character id="${character.id}">`,
     `Name: ${character.name}`,
     `Species: ${character.species}`,
+    `Body form: ${character.bodyForm}`,
     `Age: ${character.age} (${character.ageCategory})`,
     `Role: ${character.role}`,
     `Core: ${character.summary}`,

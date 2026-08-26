@@ -21,11 +21,13 @@ test("the new ranger area has no Whiteclaw identity or lore", () => {
   }
 });
 
-test("all inhabitants are anthro or half-beast and humans are forbidden", () => {
+test("all inhabitants are speaking ferals with valid mixed body forms and humans are forbidden", () => {
   const identity = BITTERROOT_WORLD.lore.find((entry) => entry.id === "world-identity");
-  assert.match(identity.content, /only by anthropomorphic and half-beast/i);
+  assert.match(identity.content, /intelligent, speaking feral/i);
+  assert.match(identity.content, /fully quadrupedal, semi-upright, or upright half-beast/i);
   assert.match(identity.content, /Humans do not exist/i);
   assert.ok(BITTERROOT_WORLD.characters.every((character) => character.species && character.species !== "human"));
+  assert.ok(BITTERROOT_WORLD.characters.every((character) => /^(quadrupedal|semi-upright|upright)-feral$/.test(character.bodyForm)));
 });
 
 test("place availability does not dump the whole world into cast", () => {
@@ -41,4 +43,11 @@ test("Pip is a correctly gated minor", () => {
   assert.equal(pip.ageCategory, "minor");
   assert.equal(pip.contentRating, "general");
   assert.ok(pip.invariants.some((line) => /No sexual or romanticized adult content/i.test(line)));
+});
+
+test("Bitterroot is explicitly pre-industrial", () => {
+  const era = BITTERROOT_WORLD.lore.find((entry) => entry.id === "pre-industrial-era");
+  assert.equal(era.constant, true);
+  assert.match(era.content, /pre-industrial/i);
+  assert.match(era.content, /Do not introduce electricity/i);
 });

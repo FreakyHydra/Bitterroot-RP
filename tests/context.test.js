@@ -38,6 +38,8 @@ test("context hard-forbids humans", () => {
   const result = compileBitterrootContext({ persona, placeId: "east-marker-trail", primaryCharacterId: "ragna-holt" });
   assert.match(result.prompt, /humans do not exist/i);
   assert.match(result.prompt, /must not be introduced/i);
+  assert.match(result.prompt, /intelligent, speaking feral/i);
+  assert.match(result.prompt, /Body form: upright-feral/i);
 });
 
 test("context includes relevant place ancestry and bounded cast", () => {
@@ -49,4 +51,11 @@ test("context includes relevant place ancestry and bounded cast", () => {
   assert.deepEqual(result.manifest.placePath, ["bitterroot", "howling-hills", "splitpine-reach", "east-marker-trail"]);
   assert.deepEqual(result.manifest.castIds, ["ragna-holt"]);
   assert.ok(result.manifest.loreIds.includes("brackenjaw-culture"));
+});
+
+test("context enforces the pre-industrial era", () => {
+  const result = compileBitterrootContext({ persona, placeId: "east-marker-trail", primaryCharacterId: "ragna-holt" });
+  assert.ok(result.manifest.loreIds.includes("pre-industrial-era"));
+  assert.match(result.prompt, /Bitterroot is pre-industrial/i);
+  assert.match(result.prompt, /Do not introduce industrial or modern technology/i);
 });

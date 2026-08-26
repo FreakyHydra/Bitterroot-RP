@@ -9,8 +9,11 @@ provider-neutral generation boundary tailored to Bitterroot.
 The first architecture/backend phase includes:
 
 - authored Bitterroot regions, places, lore, characters, and starting stories;
-- a hard setting invariant that every person is anthro/half-beast and no humans
+- a hard setting invariant that every person is an intelligent, speaking feral
+  with a quadrupedal, semi-upright, or upright half-beast body—and no humans
   exist;
+- pre-industrial material culture with body-adapted tools and no casual modern
+  technology;
 - optional world hierarchy without a general RPG engine;
 - contextual character availability for Living Cast seeding;
 - relationship context scoped by character and persona;
