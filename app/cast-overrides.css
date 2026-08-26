@@ -1,0 +1,10 @@
+.cast-secondary {
+  top: auto;
+  bottom: 40px;
+}
+
+@media (max-width: 900px) {
+  .cast-secondary {
+    bottom: 18px;
+  }
+}
