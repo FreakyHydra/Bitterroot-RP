@@ -27,8 +27,23 @@ export async function POST(request: Request) {
       headers: securityHeaders(),
     });
   } catch (error) {
-    const candidate = error as { status?: unknown; message?: unknown };
+    const candidate = error as {
+      status?: unknown;
+      message?: unknown;
+      diagnostics?: unknown;
+      stack?: unknown;
+    };
     const status = Number.isInteger(candidate.status) ? Number(candidate.status) : 400;
+
+    if (status >= 500) {
+      console.error("[Bitterroot /api/generate] generation failed", {
+        status,
+        message: String(candidate.message || "Unknown generation error"),
+        diagnostics: candidate.diagnostics ?? null,
+        stack: typeof candidate.stack === "string" ? candidate.stack : undefined,
+      });
+    }
+
     const message = status >= 500
       ? "The generation service could not complete this turn."
       : String(candidate.message || "The request could not be completed.");
