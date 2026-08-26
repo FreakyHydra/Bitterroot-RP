@@ -10,6 +10,7 @@ type Place = { id: string; name: string; kind: string; mood: string; description
 type Persona = { id: string; name: string; description: string };
 type Message = { id: string; sender: "player" | "character"; speaker: string; text: string; createdAt: string };
 type Story = { id: string; title: string; area: string; placeId: string; primaryCharacterId: string; speaker: string; description: string; opening: string; tags: string[] };
+type LoreEntry = { id: string; title: string; category: string; summary: string; content: string };
 type Session = { id: string; personaId: string; scenarioId: string; title: string; placeId: string; primaryCharacterId: string; messages: Message[]; updatedAt: string };
 type ProviderConfig = { provider: "novelai" | "ollama"; model: string; token: string };
 
@@ -31,6 +32,44 @@ const stories: Story[] = [
   { id: "borrowed-badge", title: "The Borrowed Warden Badge", area: "Ranger Station · Dawn", placeId: "brackenjaw-ranger-station", primaryCharacterId: "pip-holt", speaker: "Pip Holt", description: "Pip Holt has taken an old brass badge and volunteered for a patrol no one assigned. Finding her is only the first problem.", opening: "Pip stands on a crate beside the patrol map, a scratched brass badge pinned crookedly to her shirt. She folds her arms exactly like Ragna. “You’re late. I was about to start without you.” From the next room comes the unmistakable sound of Ragna setting down a mug very carefully.", tags: ["Family history", "Consequences", "Local mystery"] },
 ];
 
+const loreEntries: LoreEntry[] = [
+  {
+    id: "beastfolk",
+    title: "The Beastfolk",
+    category: "Origins",
+    summary: "The peoples of Bitterroot and the feral lineages they came from.",
+    content: "Humans never existed in Bitterroot.\n\nThe peoples of Bitterroot evolved from ancient feral animal lineages. Over countless generations, some developed greater intelligence, language, culture, tools, and civilization. These became the Beastfolk.\n\nTheir bodies evolved in different directions. Some are upright, some semi-upright, and some remain largely quadrupedal.\n\nWolves, foxes, bears, felines, birds, reptiles, ungulates, rodents, and many other lineages produced their own Beastfolk peoples.\n\nEvery settlement, kingdom, religion, war, invention, and piece of history in Bitterroot belongs to them.\n\nThis world has always belonged to the Beastfolk.",
+  },
+  {
+    id: "predator-prey",
+    title: "Predator and Prey",
+    category: "Circle of Life",
+    summary: "Civilization changed the rules around the food chain, but never erased it.",
+    content: "Predator and prey relationships in Bitterroot remain much as they always were.\n\nBecoming Beastfolk did not erase instinct, diet, fear, or the old place each lineage held in the food chain. Predatory Beastfolk may still hunt prey Beastfolk in some regions, and prey lineages still grow up knowing which scents, tracks, calls, and territories mean danger.\n\nCivilization grew around that reality. Different communities created different laws, customs, taboos, and traditions for it. Some forbid hunting other Beastfolk. Some tolerate it only under particular circumstances. Others accept it as part of life.\n\nPredator and prey are not new social categories. They are ancient relationships that civilization inherited.",
+  },
+  {
+    id: "circle-of-life",
+    title: "The Circle of Life",
+    category: "World Concepts",
+    summary: "Life feeds life, and every culture has its own way of living with that truth.",
+    content: "Everything eats. Everything is eaten. Everything dies, and everything eventually feeds something else.\n\nPredators hunt because their bodies demand it. Prey survive because theirs demand the same. Death feeds scavengers, soil, forests, rivers, insects, and the next generation.\n\nBeastfolk civilization did not end that cycle. It gave the cycle laws, customs, rituals, taboos, and meaning. Some cultures treat the hunt with reverence. Some see it as ordinary survival. Others draw hard lines around who may be hunted and when.\n\nThe Circle of Life is not one universal religion. It is simply a truth the peoples of Bitterroot cannot entirely escape: life survives by consuming life, and every creature eventually returns something to the world.",
+  },
+  {
+    id: "before-industry",
+    title: "Before Industry",
+    category: "Everyday Life",
+    summary: "A pre-industrial world built from timber, stone, fire, muscle, water, and craft.",
+    content: "Bitterroot is a pre-industrial world. Roads, homes, tools, weapons, farms, mills, carts, boats, and fortifications are built through handcraft and hard labor.\n\nCommunities rely on timber, stone, leather, metalwork, fire, muscle, wind, and water. Distance matters. Weather matters. A broken bridge or a bad harvest can change the fate of a settlement.",
+  },
+  {
+    id: "runic-magic",
+    title: "Runic Magic",
+    category: "Mysteries",
+    summary: "Old markings, carved symbols, and power that sits quietly inside the world.",
+    content: "Magic in Bitterroot leans toward the runic rather than the spectacular.\n\nSymbols may be carved into stone, tools, weapons, doors, graves, charms, or boundary markers. Some markings are practical and understood. Others are old, half-forgotten, or treated with caution.\n\nHow deep runic magic reaches into the world is not fully understood, even by those who use it. Bitterroot has room for alchemy, herbal potions, old rites, and supernatural things without turning everyday life into constant spellcasting.",
+  },
+];
+
 const nav = [
   { value: "world", label: "World", icon: Compass }, { value: "places", label: "Places", icon: Map },
   { value: "people", label: "People", icon: Users }, { value: "stories", label: "Stories", icon: BookOpen },
@@ -45,6 +84,7 @@ export default function Home() {
   const [session, setSession] = useState<Session | null>(null);
   const [personaOpen, setPersonaOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [selectedLore, setSelectedLore] = useState<LoreEntry | null>(null);
   const [pendingStory, setPendingStory] = useState<number | null>(null);
   const [providerConfig, setProviderConfig] = useState<ProviderConfig>({ provider: "novelai", model: "xialong-v1", token: "" });
   const currentPlace = places.find((place) => place.id === selectedPlace) ?? places[0];
@@ -215,12 +255,10 @@ export default function Home() {
         </TabsContent>
 
         <TabsContent value="lore" className="tab-panel inner-panel">
-          <header className="page-heading split-heading"><div><p className="eyebrow">What the world knows</p><h1>A land shaped by tooth, paw, and promise.</h1></div><p>Lore is revealed through travel, relationships, and consequence. What appears here is what your story can reasonably know.</p></header>
-          <section className="lore-grid">
-            <article className="lore-lead"><Trees /><span>I</span><h2>No human world</h2><p>Bitterroot belongs entirely to speaking feral peoples. They walk in mixed body forms—four-footed, semi-upright, and upright—without becoming human beneath the fur.</p></article>
-            <article><span>II</span><h2>Before industry</h2><p>Roads are cut by paw and hand. Communities rely on timber, stone, leather, fire, muscle, water, and hard-won craft. Distance still matters.</p></article>
-            <article><span>III</span><h2>Freedom has weight</h2><p>There are no clean alignments. Tradition can shelter or constrain; survival can demand mercy or cruelty. The world remembers which you choose.</p></article>
-            <article><span>IV</span><h2>Relationships persist</h2><p>Trust belongs to a particular character and a particular persona. History does not leak between identities, and closeness never erases temperament.</p></article>
+          <header className="page-heading split-heading"><div><p className="eyebrow">What the world knows</p><h1>The Bitterroot Codex.</h1></div><p>Open an entry to read it without leaving the world browser. More writings can be added as places, cultures, and histories grow.</p></header>
+          <section className="place-index" aria-label="Bitterroot lore index">
+            <span className="index-label">Known writings and world knowledge</span>
+            {loreEntries.map((entry) => <button key={entry.id} onClick={() => setSelectedLore(entry)}><span>{entry.title}</span><small>{entry.category} · {entry.summary}</small></button>)}
           </section>
         </TabsContent>
       </Tabs>
@@ -228,8 +266,13 @@ export default function Home() {
 
       <PersonaDialog open={personaOpen} setOpen={setPersonaOpen} persona={persona} onSubmit={submitPersona} />
       <ProviderDialog open={settingsOpen} setOpen={setSettingsOpen} config={providerConfig} setConfig={setProviderConfig} onSubmit={saveProviderSettings} />
+      <LoreDialog entry={selectedLore} onOpenChange={(open) => { if (!open) setSelectedLore(null); }} />
     </main>
   );
+}
+
+function LoreDialog({ entry, onOpenChange }: { entry: LoreEntry | null; onOpenChange: (open: boolean) => void }) {
+  return <Dialog open={Boolean(entry)} onOpenChange={onOpenChange}><DialogContent className="bitter-dialog"><DialogHeader><div className="dialog-icon"><BookOpen /></div><DialogTitle>{entry?.title ?? "Lore"}</DialogTitle><DialogDescription>{entry?.category ?? "Bitterroot Codex"}</DialogDescription></DialogHeader><div style={{ whiteSpace: "pre-line", color: "#c8c8ba", font: "15px/1.85 Georgia, serif", maxHeight: "65vh", overflowY: "auto", paddingRight: "8px" }}>{entry?.content}</div></DialogContent></Dialog>;
 }
 
 function PlayerScreen({ session, persona, providerConfig, onSessionChange, onExit, onSettings, settingsOpen, setSettingsOpen, saveProviderSettings, setProviderConfig }: {
@@ -396,7 +439,7 @@ function PlayerScreen({ session, persona, providerConfig, onSessionChange, onExi
 }
 
 function PersonaDialog({ open, setOpen, persona, onSubmit }: { open: boolean; setOpen: (open: boolean) => void; persona: Persona | null; onSubmit: (event: FormEvent<HTMLFormElement>) => void }) {
-  return <Dialog open={open} onOpenChange={setOpen}><DialogContent className="bitter-dialog"><DialogHeader><div className="dialog-icon"><UserRound /></div><DialogTitle>Who enters Bitterroot?</DialogTitle><DialogDescription>Your persona is kept separate from every other identity. Relationships and memories belong to this persona alone.</DialogDescription></DialogHeader><form className="dialog-form" onSubmit={onSubmit}><label>Name<input name="name" defaultValue={persona?.name ?? ""} maxLength={80} required placeholder="Your character’s name" /></label><label>Identity and appearance<textarea name="description" defaultValue={persona?.description ?? ""} maxLength={1200} placeholder="Species, body form, appearance, temperament, and anything the cast should know." /></label><p className="form-note">Bitterroot contains speaking feral animal peoples only. No human personas.</p><button className="primary-action" type="submit">Save persona <ArrowRight /></button></form></DialogContent></Dialog>;
+  return <Dialog open={open} onOpenChange={setOpen}><DialogContent className="bitter-dialog"><DialogHeader><div className="dialog-icon"><UserRound /></div><DialogTitle>Who enters Bitterroot?</DialogTitle><DialogDescription>Your persona is kept separate from every other identity. Relationships and memories belong to this persona alone.</DialogDescription></DialogHeader><form className="dialog-form" onSubmit={onSubmit}><label>Name<input name="name" defaultValue={persona?.name ?? ""} maxLength={80} required placeholder="Your character’s name" /></label><label>Identity and appearance<textarea name="description" defaultValue={persona?.description ?? ""} maxLength={1200} placeholder="Species, body form, appearance, temperament, and anything the cast should know." /></label><p className="form-note">Bitterroot contains Beastfolk peoples only. No human personas.</p><button className="primary-action" type="submit">Save persona <ArrowRight /></button></form></DialogContent></Dialog>;
 }
 
 function ProviderDialog({ open, setOpen, config, setConfig, onSubmit }: { open: boolean; setOpen: (open: boolean) => void; config: ProviderConfig; setConfig: (config: ProviderConfig) => void; onSubmit: (event: FormEvent<HTMLFormElement>) => void }) {
