@@ -1,0 +1,203 @@
+/* Bitterroot Lore Codex — atmospheric archive treatment */
+[aria-label="Bitterroot lore index"] {
+  counter-reset: lore-entry;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid rgba(178, 138, 76, .28);
+  background: rgba(178, 138, 76, .2);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, .28), inset 0 1px rgba(238, 231, 214, .05);
+}
+
+[aria-label="Bitterroot lore index"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: .24;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(178, 138, 76, .16), transparent 30%),
+    radial-gradient(circle at 88% 72%, rgba(78, 103, 78, .18), transparent 35%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, transparent 1px 4px);
+  mix-blend-mode: screen;
+}
+
+[aria-label="Bitterroot lore index"] .index-label {
+  grid-column: 1 / -1;
+  position: relative;
+  z-index: 3;
+  min-height: 54px;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #c9a96f;
+  border-bottom: 1px solid rgba(178, 138, 76, .22);
+  background: linear-gradient(90deg, rgba(178, 138, 76, .11), rgba(20, 28, 22, .92) 35%, rgba(20, 28, 22, .96));
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+}
+
+[aria-label="Bitterroot lore index"] .index-label::before,
+[aria-label="Bitterroot lore index"] .index-label::after {
+  content: "✦";
+  color: rgba(178, 138, 76, .72);
+  font-size: 9px;
+}
+
+[aria-label="Bitterroot lore index"] button {
+  counter-increment: lore-entry;
+  isolation: isolate;
+  position: relative;
+  z-index: 3;
+  min-height: 150px;
+  padding: 28px 62px 28px 76px;
+  overflow: hidden;
+  text-align: left;
+  color: var(--bone);
+  border: 0;
+  border-right: 1px solid rgba(238, 231, 214, .08);
+  border-bottom: 1px solid rgba(238, 231, 214, .08);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.018), transparent 45%),
+    #141c16;
+  cursor: pointer;
+  transition: transform .22s ease, background .22s ease, box-shadow .22s ease;
+}
+
+[aria-label="Bitterroot lore index"] button:nth-of-type(odd) {
+  background-color: #162019;
+}
+
+[aria-label="Bitterroot lore index"] button::before {
+  content: counter(lore-entry, upper-roman);
+  position: absolute;
+  left: 25px;
+  top: 27px;
+  width: 31px;
+  height: 31px;
+  display: grid;
+  place-items: center;
+  color: #b28a4c;
+  border: 1px solid rgba(178, 138, 76, .42);
+  transform: rotate(45deg);
+  font: 9px/1 Georgia, serif;
+  transition: .22s ease;
+}
+
+[aria-label="Bitterroot lore index"] button::after {
+  content: "›";
+  position: absolute;
+  right: 26px;
+  top: 50%;
+  color: rgba(178, 138, 76, .42);
+  transform: translateY(-50%);
+  font: 34px/1 Georgia, serif;
+  transition: .22s ease;
+}
+
+[aria-label="Bitterroot lore index"] button span {
+  display: block;
+  margin: 0 0 12px;
+  color: #eee7d6;
+  font: 400 28px/1.05 Georgia, serif;
+  letter-spacing: -.02em;
+  transition: color .22s ease, transform .22s ease;
+}
+
+[aria-label="Bitterroot lore index"] button small {
+  display: block;
+  max-width: 500px;
+  color: #8e998f;
+  font: 11px/1.7 Georgia, serif;
+  letter-spacing: .02em;
+  text-transform: none;
+}
+
+[aria-label="Bitterroot lore index"] button small::first-letter {
+  color: #c3a064;
+}
+
+[aria-label="Bitterroot lore index"] button:hover,
+[aria-label="Bitterroot lore index"] button:focus-visible {
+  z-index: 4;
+  outline: none;
+  background:
+    radial-gradient(circle at 18% 50%, rgba(178, 138, 76, .14), transparent 40%),
+    linear-gradient(110deg, #1c2a20, #152019);
+  box-shadow: inset 3px 0 #b28a4c, 0 12px 30px rgba(0,0,0,.18);
+}
+
+[aria-label="Bitterroot lore index"] button:hover span,
+[aria-label="Bitterroot lore index"] button:focus-visible span {
+  color: #d9bd87;
+  transform: translateX(4px);
+}
+
+[aria-label="Bitterroot lore index"] button:hover::before,
+[aria-label="Bitterroot lore index"] button:focus-visible::before {
+  color: #171d18;
+  background: #b28a4c;
+  box-shadow: 0 0 22px rgba(178, 138, 76, .18);
+}
+
+[aria-label="Bitterroot lore index"] button:hover::after,
+[aria-label="Bitterroot lore index"] button:focus-visible::after {
+  right: 20px;
+  color: #b28a4c;
+}
+
+/* Give the lore page itself a faint archival glow without changing other tabs. */
+.inner-panel:has([aria-label="Bitterroot lore index"]) {
+  position: relative;
+}
+
+.inner-panel:has([aria-label="Bitterroot lore index"])::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 245px;
+  width: min(980px, 88vw);
+  height: 460px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background: radial-gradient(ellipse, rgba(94, 121, 91, .075), transparent 68%);
+  filter: blur(12px);
+}
+
+@media (max-width: 820px) {
+  [aria-label="Bitterroot lore index"] {
+    grid-template-columns: 1fr;
+  }
+
+  [aria-label="Bitterroot lore index"] button {
+    min-height: 132px;
+  }
+}
+
+@media (max-width: 620px) {
+  [aria-label="Bitterroot lore index"] button {
+    min-height: 118px;
+    padding: 23px 48px 23px 62px;
+  }
+
+  [aria-label="Bitterroot lore index"] button::before {
+    left: 19px;
+    top: 23px;
+    width: 27px;
+    height: 27px;
+  }
+
+  [aria-label="Bitterroot lore index"] button::after {
+    right: 17px;
+  }
+
+  [aria-label="Bitterroot lore index"] button span {
+    font-size: 23px;
+  }
+}
