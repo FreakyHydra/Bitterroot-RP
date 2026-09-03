@@ -3,6 +3,8 @@ import "./globals.css";
 import "./cast-overrides.css";
 import "./lore.css";
 import "./lore-reader-dark.css";
+import "./roleplay-visuals.css";
+import { RoleplayVisuals } from "@/components/roleplay-visuals";
 
 export const metadata: Metadata = {
   title: "Bitterroot — An Interactive Saga",
@@ -11,5 +13,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body>{children}</body></html>;
+  return <html lang="en"><body>{children}<RoleplayVisuals /></body></html>;
 }
